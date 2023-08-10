@@ -1,0 +1,33 @@
+{
+  "name": "edutatar",
+  "version": "1.0.0",
+  "description": "Library for working with edu.tatar.ru",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sxpso/edutatar.git"
+  },
+  "keywords": [
+    "edutatar",
+    "api",
+    "library",
+    "edu"
+  ],
+  "bugs": {
+    "url": "https://github.com/sxpso/edutatar/issues"
+  },
+  "homepage": "https://github.com/sxpso/edutatar",
+  "author": "Ildar Khuzhiakhmetov",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.46.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.28.0",
+    "sslkeylog": "^0.2.2"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12",
+    "https-proxy-agent": "^2.2.4"
+  }
+}
