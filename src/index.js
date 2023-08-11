@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /**
  * @file Main file
  * @module edutatar
@@ -9,8 +10,6 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 class edutatar {
-  session;
-
   constructor(session) {
     this.session = session || null;
   }
@@ -30,7 +29,6 @@ class edutatar {
       axios.defaults.proxy = false;
       axios.defaults.httpsAgent = new HttpsProxyAgent(proxy);
     }
-    sslkeylog.hookAll();
     axios.post('https://edu.tatar.ru/logon', {
       main_login2: login,
       main_password2: password,
