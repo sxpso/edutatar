@@ -1,6 +1,6 @@
 {
   "name": "edutatar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Library for working with edu.tatar.ru",
   "main": "src/index.js",
   "repository": {
@@ -22,8 +22,7 @@
   "devDependencies": {
     "eslint": "^8.46.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.28.0",
-    "sslkeylog": "^0.2.2"
+    "eslint-plugin-import": "^2.28.0"
   },
   "dependencies": {
     "axios": "^1.4.0",
