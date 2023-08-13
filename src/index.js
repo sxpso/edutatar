@@ -74,38 +74,25 @@ class edutatar {
      * Возвращает основную информацию о пользователе, такую как имя, логин, должность, и т.д.
      * @returns {Promise} - Возвращает промис с основной информацией о пользователе
   */
-  getUserInfo = () => new Promise((resolve, reject) => {
-    axios.get('https://edu.tatar.ru/user/anketa', {
-      headers: {
-        Host: 'edu.tatar.ru',
-        Cookie: `${this.session}`,
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36',
-        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-        'Sec-GPC': '1',
-        'Sec-Fetch-Site': 'same-origin',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-User': '?1',
-        'Sec-Fetch-Dest': 'document',
-        Referer: 'https://edu.tatar.ru/',
-        'Accept-Encoding': 'gzip, deflate',
-        'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
-      },
-      withCredentials: true,
-    }).then((response) => {
-      let body = cheerio.load(response.data);
-      body = body('tbody');
-      return resolve({
-        name: body.find('tr:nth-child(1) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ ]/g, ''),
-        login: body.find('tr:nth-child(2) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
-        position: body.find('tr:nth-child(3) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
-        birthday: body.find('tr:nth-child(4) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
-        sex: body.find('tr:nth-child(5) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
-        interests: body.find('tr:nth-child(6) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
-        subjects: body.find('tr:nth-child(7) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
-        extra: body.find('tr:nth-child(8) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
+  get = () => new Promise((resolve, reject) => {
+    this.call('user/anketa')
+      .then((anketa) => {
+        const body = cheerio.load(anketa);
+        const tbody = body('tbody');
+        resolve({
+          name: tbody.find('tr:nth-child(1) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ ]/g, ''),
+          login: tbody.find('tr:nth-child(2) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
+          position: tbody.find('tr:nth-child(3) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
+          birthday: tbody.find('tr:nth-child(4) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
+          sex: tbody.find('tr:nth-child(5) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
+          interests: tbody.find('tr:nth-child(6) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
+          subjects: tbody.find('tr:nth-child(7) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
+          extra: tbody.find('tr:nth-child(8) > td:nth-child(2)').text().replace(/[^а-яёА-ЯЁ]/g, ''),
+        });
+      })
+      .catch((error) => {
+        reject(error);
       });
-    });
   });
 
   /**
@@ -115,7 +102,24 @@ class edutatar {
    * @returns {Promise} - Возвращает промис с данными почты пользователя
   */
   getEmailData = () => new Promise((resolve, reject) => {
-    axios.get('https://edu.tatar.ru/user/anketa', {
+    this.call('user/anketa')
+      .then((anketa) => {
+        const body = cheerio.load(anketa);
+        resolve({
+          login: body("input[name='Login']").attr('value'),
+          mail: `${body("input[name='Login']").attr('value')}@edu.tatar.ru`,
+          password: body("input[name='Password']").attr('value'),
+        });
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+
+  call = (path, method) => new Promise((resolve, reject) => {
+    axios({
+      method: method || 'GET',
+      url: `https://edu.tatar.ru/${path}`,
       headers: {
         Host: 'edu.tatar.ru',
         Cookie: `${this.session}`,
@@ -133,12 +137,9 @@ class edutatar {
       },
       withCredentials: true,
     }).then((response) => {
-      const body = cheerio.load(response.data);
-      return resolve({
-        login: body("input[name='Login']").attr('value'),
-        email: `${body("input[name='Login']").attr('value')}@edu.tatar.ru`,
-        password: body("input[name='Password']").attr('value'),
-      });
+      resolve(response.data);
+    }).catch((error) => {
+      reject(error);
     });
   });
 }
