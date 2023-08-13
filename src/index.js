@@ -116,6 +116,14 @@ class edutatar {
       });
   });
 
+  /**
+   * Call any page.
+   *
+   * Отправить запрос на любую страницу
+   * @param {string} path - Путь к странице
+   * @param {string} method - Метод запроса (GET, POST, PUT, DELETE, PATCH)
+   * @returns {Promise} - Возвращает промис с ответом сервера
+  */
   call = (path, method) => new Promise((resolve, reject) => {
     axios({
       method: method || 'GET',
